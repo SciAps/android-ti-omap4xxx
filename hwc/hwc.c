@@ -919,6 +919,12 @@ static bool blit_layers(omap_hwc_device_t *hwc_dev, hwc_display_contents_1_t *li
             break;
     }
 
+    size_t num_layers = list->numHwLayers;
+    if (hwc_dev->base.common.version > HWC_DEVICE_API_VERSION_1_0) {
+        /* Ignore HWC_FRAMEBUFFER_TARGET layer at the end of the list */
+        num_layers -= 1;
+    }
+
     /*
      * Request the layer identities to SurfaceFlinger, first figure out if the
      * operation is supported
@@ -928,11 +934,11 @@ static bool blit_layers(omap_hwc_device_t *hwc_dev, hwc_display_contents_1_t *li
         goto err_out;
 
     /* Check if we have enough space in the extended layer list */
-    if ((sizeof(hwc_layer_extended_t) * list->numHwLayers) > sizeof(grgz_ext_layer_list))
+    if ((sizeof(hwc_layer_extended_t) * num_layers) > sizeof(grgz_ext_layer_list))
         goto err_out;
 
     uint32_t i;
-    for (i = 0; i < list->numHwLayers; i++) {
+    for (i = 0; i < num_layers; i++) {
         hwc_layer_extended_t *ext_layer = &grgz_ext_layer_list.layers[i];
         ext_layer->idx = i;
         if (hwc_dev->procs->extension_cb(hwc_dev->procs, HWC_EXTENDED_OP_LAYERDATA,
@@ -947,7 +953,7 @@ static bool blit_layers(omap_hwc_device_t *hwc_dev, hwc_display_contents_1_t *li
                 .dstgeom = &gscrngeom,
                 .layers = list->hwLayers,
                 .extlayers = grgz_ext_layer_list.layers,
-                .layerno = list->numHwLayers
+                .layerno = num_layers
             }
         }
     };
@@ -960,7 +966,7 @@ static bool blit_layers(omap_hwc_device_t *hwc_dev, hwc_display_contents_1_t *li
         goto err_out;
 
     uint32_t count = 0;
-    for (i = 0; i < list->numHwLayers; i++) {
+    for (i = 0; i < num_layers; i++) {
         if (list->hwLayers[i].compositionType != HWC_OVERLAY) {
             count++;
         }
@@ -1005,7 +1011,7 @@ static bool blit_layers(omap_hwc_device_t *hwc_dev, hwc_display_contents_1_t *li
     ALOGE_IF(primary_comp->blit_num != out.data.bvc.cmdlen,"blit_num != out.data.bvc.cmdlen, %d != %d", primary_comp->blit_num, out.data.bvc.cmdlen);
 
     /* all layers will be rendered without SGX help either via DSS or blitter */
-    for (i = 0; i < list->numHwLayers; i++) {
+    for (i = 0; i < num_layers; i++) {
         if (list->hwLayers[i].compositionType != HWC_OVERLAY) {
             list->hwLayers[i].compositionType = HWC_OVERLAY;
             //ALOGI("blitting layer %d", i);

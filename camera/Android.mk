@@ -1,5 +1,3 @@
-ifeq ($(findstring omap, $(TARGET_BOARD_PLATFORM)),omap)
-
 LOCAL_PATH:= $(call my-dir)
 
 #OMAP4_CAMERA_HAL_USES:= OMX
@@ -244,7 +242,6 @@ LOCAL_MODULE_TAGS:= optional
 
 include $(BUILD_HEAPTRACKED_SHARED_LIBRARY)
 
-endif
 endif
 endif
 endif

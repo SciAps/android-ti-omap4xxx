@@ -51,7 +51,6 @@ struct omap_hwc_device {
     /* currently we use only two FB devices, but decalring for MAX_DISPLAYS */
     IMG_framebuffer_device_public_t *fb_dev[MAX_DISPLAYS];
 
-    struct dsscomp_display_info fb_dis;
     int fb_fd[MAX_DISPLAYS];     /* file descriptor for /dev/fbx */
     int dsscomp_fd;              /* file descriptor for /dev/dsscomp */
     int pipe_fds[2];             /* pipe to event thread */

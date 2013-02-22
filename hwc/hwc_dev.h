@@ -68,4 +68,6 @@ struct omap_hwc_device {
 };
 typedef struct omap_hwc_device omap_hwc_device_t;
 
+int set_best_hdmi_mode(omap_hwc_device_t *hwc_dev, int disp, uint32_t xres, uint32_t yres, float xpy);
+
 #endif

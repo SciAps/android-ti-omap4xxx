@@ -16,8 +16,8 @@
 # all OMAP4 devices.
 
 PRODUCT_PACKAGES += \
-    camera.omap4 \
-    hwcomposer.omap4
+    camera.omap4
+    #hwcomposer.omap4
 
 PRODUCT_VENDOR_KERNEL_HEADERS := hardware/ti/omap4xxx/kernel-headers
 
